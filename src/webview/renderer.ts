@@ -49,11 +49,7 @@ function renderPipeline(pipeline: Pipeline): void {
           <div class="stage-card">
             <div class="stage-name">${esc(stage)}</div>
             <div class="jobs">
-              ${(jobsByStage[stage] ?? []).map(job => `
-                <div class="job-card" data-job="${esc(job.name)}">
-                  <span class="job-dot"></span>
-                  <span class="job-name" title="${esc(job.name)}">${esc(job.name)}</span>
-                </div>`).join('')}
+              ${(jobsByStage[stage] ?? []).map(job => renderJobCard(job)).join('')}
             </div>
           </div>
           ${i < pipeline.stages.length - 1 ? '<div class="arrow">›</div>' : ''}
@@ -66,6 +62,21 @@ function renderPipeline(pipeline: Pipeline): void {
       if (currentPipeline) toggleDetail(card.dataset.job!, currentPipeline)
     })
   })
+}
+
+function renderJobCard(job: Job): string {
+  const isManual = job.when === 'manual'
+  const dotClass = isManual ? 'job-dot job-dot--manual' : 'job-dot'
+  const needsHtml = job.needs?.length
+    ? job.needs.map(n => `<span class="job-needs-item" title="needs: ${esc(n)}">↑${esc(n)}</span>`).join('')
+    : ''
+  return `
+    <div class="job-card${isManual ? ' job-card--manual' : ''}" data-job="${esc(job.name)}">
+      <span class="${dotClass}">${isManual ? '▶' : ''}</span>
+      <span class="job-name" title="${esc(job.name)}">${esc(job.name)}</span>
+      ${isManual ? '<span class="job-badge job-badge--manual">manual</span>' : ''}
+      ${needsHtml ? `<div class="job-needs">${needsHtml}</div>` : ''}
+    </div>`
 }
 
 function toggleDetail(jobName: string, pipeline: Pipeline): void {
