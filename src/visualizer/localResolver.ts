@@ -8,6 +8,10 @@ export async function resolveLocal(
   const relative = filePath.startsWith('/') ? filePath.slice(1) : filePath
   const absolute = path.join(workspaceRoot, relative)
 
+  if (!absolute.startsWith(workspaceRoot + path.sep) && absolute !== workspaceRoot) {
+    throw new Error(`include.local: path traversal denied: ${filePath}`)
+  }
+
   try {
     return await fs.readFile(absolute, 'utf-8')
   } catch (e: any) {

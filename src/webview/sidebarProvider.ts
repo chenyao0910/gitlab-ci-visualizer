@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import * as crypto from 'crypto'
 import { PipelineMessage } from '../types'
 
 export class SidebarProvider implements vscode.WebviewViewProvider {
@@ -17,7 +18,6 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       enableScripts: true,
       localResourceRoots: [
         vscode.Uri.joinPath(this.extensionUri, 'dist'),
-        vscode.Uri.joinPath(this.extensionUri, 'src', 'webview'),
       ],
     }
 
@@ -33,7 +33,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
       vscode.Uri.joinPath(this.extensionUri, 'dist', 'renderer.js')
     )
     const stylesUri = webview.asWebviewUri(
-      vscode.Uri.joinPath(this.extensionUri, 'src', 'webview', 'styles.css')
+      vscode.Uri.joinPath(this.extensionUri, 'dist', 'styles.css')
     )
     const nonce = getNonce()
 
@@ -58,6 +58,5 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
 }
 
 function getNonce(): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  return Array.from({ length: 32 }, () => chars[Math.floor(Math.random() * chars.length)]).join('')
+  return crypto.randomBytes(16).toString('hex')
 }

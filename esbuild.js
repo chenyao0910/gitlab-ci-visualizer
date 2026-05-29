@@ -33,6 +33,8 @@ async function build() {
     console.log('Watching for changes...')
   } else {
     await Promise.all(configs.map(c => esbuild.build(c)))
+    const fs = require('fs')
+    fs.copyFileSync('src/webview/styles.css', 'dist/styles.css')
     console.log('Build complete')
   }
 }

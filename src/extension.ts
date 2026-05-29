@@ -32,7 +32,9 @@ export function activate(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand('gitlabCiVisualizer.visualize', () => {
       const doc = vscode.window.activeTextEditor?.document
       if (doc && isGitlabCi(doc)) {
-        triggerUpdate(doc, context, sidebar)
+        triggerUpdate(doc, context, sidebar).catch(err =>
+          console.error('GitLab CI Visualizer: unexpected error', err)
+        )
       } else {
         vscode.window.showWarningMessage('Open a .gitlab-ci.yml file first.')
       }
@@ -41,7 +43,9 @@ export function activate(context: vscode.ExtensionContext): void {
 
   context.subscriptions.push(
     vscode.workspace.onDidSaveTextDocument(doc => {
-      if (isGitlabCi(doc)) triggerUpdate(doc, context, sidebar)
+      if (isGitlabCi(doc)) triggerUpdate(doc, context, sidebar).catch(err =>
+        console.error('GitLab CI Visualizer: unexpected error', err)
+      )
     })
   )
 }
@@ -70,7 +74,7 @@ async function triggerUpdate(
       workspaceRoot,
       gitlabConfig: { instanceUrl, token },
     })
-    const merged = mergeDocuments(docs)
+    const merged = mergeDocuments([...docs].reverse())
     const pipeline = extractPipeline(merged)
 
     sidebar.postMessage({ type: 'update', pipeline })

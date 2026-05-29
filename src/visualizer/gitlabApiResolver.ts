@@ -55,5 +55,8 @@ function fetchWithToken(url: string, token: string): Promise<string> {
 
     req.on('error', reject)
     req.end()
+    req.setTimeout(10_000, () => {
+      req.destroy(new Error('GitLab API request timed out after 10s'))
+    })
   })
 }
