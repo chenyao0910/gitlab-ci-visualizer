@@ -1,0 +1,238 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--vscode-font-family);
+  font-size: var(--vscode-font-size);
+  color: var(--vscode-foreground);
+  background: var(--vscode-sideBar-background);
+  padding: 8px;
+  overflow-x: auto;
+}
+
+/* ── Loading ── */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  gap: 12px;
+  color: var(--vscode-descriptionForeground);
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid var(--vscode-progressBar-background);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Error ── */
+.error {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  background: var(--vscode-inputValidation-errorBackground);
+  border: 1px solid var(--vscode-inputValidation-errorBorder);
+  border-radius: 4px;
+}
+
+.error-icon { font-size: 20px; }
+
+.error-message {
+  font-weight: 600;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.error-detail {
+  font-size: 0.85em;
+  color: var(--vscode-descriptionForeground);
+  white-space: pre-wrap;
+}
+
+/* ── Pipeline ── */
+.pipeline {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0;
+  padding-bottom: 8px;
+}
+
+.stage-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.stage-card {
+  min-width: 110px;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 4px;
+  background: var(--vscode-editor-background);
+  overflow: hidden;
+}
+
+.stage-name {
+  font-size: 0.72em;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 5px 8px;
+  background: var(--vscode-badge-background);
+  color: var(--vscode-badge-foreground);
+  text-align: center;
+}
+
+.jobs {
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.job-card {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 7px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.1s;
+  user-select: none;
+}
+
+.job-card:hover {
+  background: var(--vscode-list-hoverBackground);
+}
+
+.job-card.selected {
+  background: var(--vscode-list-activeSelectionBackground);
+  color: var(--vscode-list-activeSelectionForeground);
+}
+
+.job-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #31af64;
+  flex-shrink: 0;
+}
+
+.job-name {
+  font-size: 0.82em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90px;
+}
+
+.arrow {
+  padding: 0 5px;
+  color: var(--vscode-descriptionForeground);
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+/* ── Job detail panel ── */
+.job-detail {
+  margin-top: 12px;
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 4px;
+  background: var(--vscode-editor-background);
+  overflow: hidden;
+}
+
+.job-detail.hidden { display: none; }
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 10px;
+  background: var(--vscode-badge-background);
+  color: var(--vscode-badge-foreground);
+}
+
+.detail-title {
+  font-weight: 700;
+  font-size: 0.88em;
+}
+
+.detail-close {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 0 2px;
+  opacity: 0.7;
+  line-height: 1;
+}
+
+.detail-close:hover { opacity: 1; }
+
+.detail-row {
+  display: flex;
+  gap: 8px;
+  padding: 5px 10px;
+  border-bottom: 1px solid var(--vscode-panel-border);
+  font-size: 0.82em;
+  align-items: flex-start;
+}
+
+.detail-row:last-child { border-bottom: none; }
+
+.detail-label {
+  font-weight: 700;
+  min-width: 52px;
+  color: var(--vscode-descriptionForeground);
+  flex-shrink: 0;
+}
+
+.needs-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.badge {
+  padding: 1px 6px;
+  background: var(--vscode-badge-background);
+  color: var(--vscode-badge-foreground);
+  border-radius: 10px;
+  font-size: 0.8em;
+}
+
+.script-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--vscode-editor-font-family);
+}
+
+.script-line {
+  padding: 1px 0;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.rules-pre {
+  font-family: var(--vscode-editor-font-family);
+  font-size: 0.85em;
+  white-space: pre-wrap;
+  word-break: break-all;
+  color: var(--vscode-descriptionForeground);
+}
