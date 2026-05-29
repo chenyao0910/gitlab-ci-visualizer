@@ -2,6 +2,8 @@
 
 Instantly visualize your `.gitlab-ci.yml` pipeline — stages, jobs, dependencies, and `include` expansion — right inside VS Code.
 
+![Preview](resources/preview.png)
+
 ## Features
 
 - **Auto-visualize** — opens the pipeline panel whenever you switch to or save a `.gitlab-ci.yml` file
