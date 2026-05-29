@@ -48,6 +48,24 @@ export function activate(context: vscode.ExtensionContext): void {
       )
     })
   )
+
+  context.subscriptions.push(
+    vscode.window.onDidChangeActiveTextEditor(editor => {
+      if (editor && isGitlabCi(editor.document)) {
+        triggerUpdate(editor.document, context, sidebar).catch(err =>
+          console.error('GitLab CI Visualizer: unexpected error', err)
+        )
+      }
+    })
+  )
+
+  // Visualize the currently active editor on startup if applicable
+  const active = vscode.window.activeTextEditor
+  if (active && isGitlabCi(active.document)) {
+    triggerUpdate(active.document, context, sidebar).catch(err =>
+      console.error('GitLab CI Visualizer: unexpected error', err)
+    )
+  }
 }
 
 function isGitlabCi(doc: vscode.TextDocument): boolean {

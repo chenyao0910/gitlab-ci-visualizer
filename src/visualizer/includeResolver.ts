@@ -1,3 +1,5 @@
+import * as https from 'https'
+import * as http from 'http'
 import { parseYaml } from './parser'
 import { resolveLocal } from './localResolver'
 import { resolveGitLabProject, GitLabConfig } from './gitlabApiResolver'
@@ -9,6 +11,28 @@ type YamlDoc = Record<string, unknown>
 export interface ResolverContext {
   workspaceRoot: string
   gitlabConfig: GitLabConfig
+}
+
+function resolveRemote(url: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const parsed = new URL(url)
+    const lib = parsed.protocol === 'https:' ? https : http
+    const req = lib.get(url, res => {
+      if (res.statusCode !== 200) {
+        reject(new Error(`include.remote: HTTP ${res.statusCode} for ${url}`))
+        res.resume()
+        return
+      }
+      const chunks: Buffer[] = []
+      res.on('data', (c: Buffer) => chunks.push(c))
+      res.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')))
+    })
+    req.setTimeout(10_000, () => {
+      req.destroy()
+      reject(new Error(`include.remote: timeout fetching ${url}`))
+    })
+    req.on('error', reject)
+  })
 }
 
 export async function resolveIncludes(
@@ -43,6 +67,8 @@ export async function resolveIncludes(
         e.ref ?? 'HEAD',
         ctx.gitlabConfig
       )
+    } else if ('remote' in entry) {
+      content = await resolveRemote((entry as any).remote)
     } else {
       continue
     }

@@ -50,7 +50,7 @@ export class SidebarProvider implements vscode.WebviewViewProvider {
   <title>GitLab CI Pipeline</title>
 </head>
 <body>
-  <div id="app"></div>
+  <div id="app"><div class="empty-state"><p>Open a <code>.gitlab-ci.yml</code> file to visualize the pipeline.</p></div></div>
   <script nonce="${nonce}" src="${rendererUri}"></script>
 </body>
 </html>`

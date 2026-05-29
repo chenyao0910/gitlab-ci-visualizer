@@ -13,6 +13,22 @@ body {
   overflow-x: auto;
 }
 
+/* ── Empty state ── */
+.empty-state {
+  padding: 40px 16px;
+  text-align: center;
+  color: var(--vscode-descriptionForeground);
+  font-size: 0.88em;
+  line-height: 1.5;
+}
+
+.empty-state code {
+  font-family: var(--vscode-editor-font-family);
+  background: var(--vscode-textBlockQuote-background);
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
 /* ── Loading ── */
 .loading {
   display: flex;

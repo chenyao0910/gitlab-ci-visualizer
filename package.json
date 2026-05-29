@@ -1,11 +1,32 @@
 {
   "name": "gitlab-ci-visualizer",
   "displayName": "GitLab CI Visualizer",
-  "description": "Visualize your GitLab CI pipeline with include expansion",
+  "description": "Visualize your GitLab CI pipeline — expand includes, see stages and jobs at a glance",
   "version": "0.1.0",
-  "publisher": "your-publisher-id",
-  "engines": { "vscode": "^1.90.0" },
-  "categories": ["Other"],
+  "publisher": "chenyao0910",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chenyao0910/gitlab-ci-visualizer"
+  },
+  "bugs": {
+    "url": "https://github.com/chenyao0910/gitlab-ci-visualizer/issues"
+  },
+  "homepage": "https://github.com/chenyao0910/gitlab-ci-visualizer#readme",
+  "license": "MIT",
+  "keywords": [
+    "gitlab",
+    "ci",
+    "pipeline",
+    "visualizer",
+    "yaml"
+  ],
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other",
+    "Visualization"
+  ],
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
@@ -52,12 +73,15 @@
     "compile": "node esbuild.js",
     "watch": "node esbuild.js --watch",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "package": "npm run compile && npx vsce package",
+    "publish": "npm run compile && npx vsce publish"
   },
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.0.0",
     "@types/vscode": "^1.90.0",
+    "@vscode/vsce": "^3.9.1",
     "esbuild": "^0.21.0",
     "typescript": "^5.4.0",
     "vitest": "^1.6.0"

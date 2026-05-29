@@ -1,0 +1,54 @@
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  NODE_VERSION: "20"
+
+build-app:
+  stage: build
+  image: node:20
+  script:
+    - npm install
+    - npm run build
+  tags:
+    - docker
+
+unit-tests:
+  stage: test
+  image: node:20
+  needs: [build-app]
+  script:
+    - npm test
+  when: on_success
+
+e2e-tests:
+  stage: test
+  image: cypress/included:13
+  needs: [build-app]
+  script:
+    - npm run test:e2e
+  when: on_success
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: always
+    - when: manual
+
+deploy-staging:
+  stage: deploy
+  image: alpine:3.18
+  needs: [unit-tests, e2e-tests]
+  script:
+    - echo "Deploying to staging..."
+    - ./scripts/deploy.sh staging
+  when: on_success
+
+deploy-production:
+  stage: deploy
+  image: alpine:3.18
+  needs: [deploy-staging]
+  script:
+    - echo "Deploying to production..."
+    - ./scripts/deploy.sh production
+  when: manual

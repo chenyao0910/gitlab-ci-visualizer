@@ -6,9 +6,79 @@ const RESERVED_KEYS = new Set([
 ])
 
 export function extractPipeline(doc: Record<string, unknown>): Pipeline {
-  const stages = extractStages(doc)
-  const jobs = extractJobs(doc)
+  const resolved = resolveExtends(doc)
+  const stages = extractStages(resolved)
+  const jobs = extractJobs(resolved)
   return { stages, jobs }
+}
+
+function resolveExtends(doc: Record<string, unknown>): Record<string, unknown> {
+  const rawJobs: Record<string, Record<string, unknown>> = {}
+  for (const [key, value] of Object.entries(doc)) {
+    if (!RESERVED_KEYS.has(key) && isPlainObject(value)) {
+      rawJobs[key] = value as Record<string, unknown>
+    }
+  }
+
+  const resolved: Record<string, Record<string, unknown>> = {}
+
+  function resolveJob(name: string, chain: Set<string>): Record<string, unknown> {
+    if (resolved[name]) return resolved[name]
+    if (chain.has(name)) return rawJobs[name] ?? {}
+
+    const raw = rawJobs[name]
+    if (!raw) return {}
+
+    const parents = raw['extends']
+    if (!parents) {
+      resolved[name] = raw
+      return raw
+    }
+
+    const parentNames = Array.isArray(parents) ? parents : [parents]
+    const newChain = new Set(chain).add(name)
+
+    let merged: Record<string, unknown> = {}
+    for (const p of parentNames) {
+      if (typeof p === 'string' && rawJobs[p]) {
+        const parentResolved = resolveJob(p, newChain)
+        merged = deepMerge(merged, parentResolved)
+      }
+    }
+    const { extends: _ext, ...ownProps } = raw
+    merged = deepMerge(merged, ownProps)
+    resolved[name] = merged
+    return merged
+  }
+
+  for (const name of Object.keys(rawJobs)) {
+    resolveJob(name, new Set())
+  }
+
+  const result: Record<string, unknown> = {}
+  for (const [key, value] of Object.entries(doc)) {
+    if (RESERVED_KEYS.has(key) || !isPlainObject(value)) {
+      result[key] = value
+    } else {
+      result[key] = resolved[key] ?? value
+    }
+  }
+  return result
+}
+
+function deepMerge(
+  target: Record<string, unknown>,
+  source: Record<string, unknown>
+): Record<string, unknown> {
+  const out = { ...target }
+  for (const [key, val] of Object.entries(source)) {
+    if (isPlainObject(val) && isPlainObject(out[key])) {
+      out[key] = deepMerge(out[key] as Record<string, unknown>, val as Record<string, unknown>)
+    } else {
+      out[key] = val
+    }
+  }
+  return out
 }
 
 function extractStages(doc: Record<string, unknown>): string[] {

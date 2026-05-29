@@ -8,3 +8,5 @@ vitest.config.ts
 *.map
 docs/**
 resources/**/*.md
+.github/**
+test-pipeline.gitlab-ci.yml
