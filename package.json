@@ -3,7 +3,7 @@
   "displayName": "GitLab CI Visualizer",
   "description": "Visualize your GitLab CI pipeline — expand includes, see stages and jobs at a glance",
   "version": "0.1.0",
-  "publisher": "chenyao0910",
+  "publisher": "GitLabCIVisualizer",
   "repository": {
     "type": "git",
     "url": "https://github.com/chenyao0910/gitlab-ci-visualizer"
