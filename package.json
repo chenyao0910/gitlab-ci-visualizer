@@ -1,5 +1,5 @@
 {
-  "name": "gitlab-ci-visualizer",
+  "name": "gitlab-ci-pipeline-visualizer",
   "displayName": "GitLab CI Visualizer",
   "description": "Visualize your GitLab CI pipeline — expand includes, see stages and jobs at a glance",
   "version": "0.1.0",
